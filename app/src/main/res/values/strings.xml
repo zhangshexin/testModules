@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">testModules</string>
+    <string name="title_dynamicfeature1">aaaaa</string>
+    <string name="title_dynamicfeature2">bbbbbb</string>
+    <string name="title_activity_main2">MainActivity2</string>
+</resources>
