@@ -1,10 +1,15 @@
 package com.example.testmodules;
 
+import android.util.Log;
+
 import org.apache.commons.compress.archivers.zip.Zip64Mode;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,13 +64,9 @@ public class ZipEntryAnne {
             }
             ZipArchiveEntry zae = new ZipArchiveEntry(file,file.getName());
             zos.putArchiveEntry(zae);
-//            IOUtils.copy(new FileInputStream(file),zos);
             FileInputStream fis=new FileInputStream(file);
-            byte[] b = new byte[1024];
-            int len = 0;
-            while ((len = fis.read(b)) != -1) {
-               zos.write(b, 0, len);
-            }
+            IOUtils.copy(fis,zos);
+            fis.close();
             zos.closeArchiveEntry();
             zos.flush();
          }
@@ -105,19 +106,21 @@ public class ZipEntryAnne {
     *            压缩后的文件
     * @throws Exception
     */
-   public static void deflater(String inPath, String outPath) throws Exception {
+   public static void deflater(final String inPath, String outPath) throws Exception { //TODO 这个压缩有问题，在压缩后大小不对，会无法解压
       FileInputStream fis = new FileInputStream(new File(inPath));
       FileOutputStream fos = new FileOutputStream(new File(outPath));
       DeflaterOutputStream dos = new DeflaterOutputStream(fos,
-              new Deflater(0,true));
-
-      byte[] b = new byte[1024];
+              new Deflater(0,true),8192);
+//      IOUtils.copy(fis,dos);
+      byte[] b = new byte[8192];
       int len = 0;
       while ((len = fis.read(b)) != -1) {
+         Log.e("TAG", "deflater:------- "+ len+"");
          dos.write(b, 0, len);
       }
       fis.close();
       dos.close();
+      fos.close();
    }
 
    private static void createZipFile() throws IOException{
@@ -231,6 +234,5 @@ public class ZipEntryAnne {
       checksum.close();
       return temp;
    }
-
 }
 

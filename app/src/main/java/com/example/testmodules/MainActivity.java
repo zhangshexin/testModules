@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
                        Date newTime = new Date();
                        String formatDate4 = sdf4.format(newTime);
-                       Log.e(TAG, "存储归档 开始时间run: "+formatDate4);
+                       Log.e(TAG, "快压缩 开始时间run: "+formatDate4);
                        try {
                            ZipEntryAnne.deflater("/sdcard/yasuoceshi/tt.iso","/sdcard/yasuoceshi2/tt2.zip");
                        } catch (Exception e) {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                        }
                        Date newTime2 = new Date();
                        String formatDate42 = sdf4.format(newTime2);
-                       Log.e(TAG, "结束时间run: "+formatDate42);
+                       Log.e(TAG, "快压缩 结束时间run: "+formatDate42);
 
                    }
                }.start();
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         Date newTime = new Date();
                         String formatDate4 = sdf4.format(newTime);
-                        Log.e(TAG, "0压缩 开始时间run: "+formatDate4);
+                        Log.e(TAG, "存储归档 开始时间run: "+formatDate4);
                         try {
                             ZipEntryAnne.createZipFile("/sdcard/yasuoceshi","/sdcard/yasuoceshi2/tt.zip");
                         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Date newTime2 = new Date();
                         String formatDate42 = sdf4.format(newTime2);
-                        Log.e(TAG, "结束时间run: "+formatDate42);
+                        Log.e(TAG, "存储归档 结束时间run: "+formatDate42);
                     }
                 }.start();
             }
