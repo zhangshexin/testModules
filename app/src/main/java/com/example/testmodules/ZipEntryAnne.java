@@ -5,6 +5,7 @@ import android.util.Log;
 import org.apache.commons.compress.archivers.zip.Zip64Mode;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,8 +14,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.*;
 import java.io.File;
 
@@ -49,11 +53,17 @@ public class ZipEntryAnne {
     * @param targetDirPath 目标文件夹
     * @param targetZipPath 目标压缩文件
     */
-   public static void createZipFile(String targetDirPath, String targetZipPath){
+   public static boolean createZipFile(String targetDirPath, String targetZipPath){
       File targetDir = new File(targetDirPath);
       File targetZip = new File(targetZipPath);
       ZipArchiveOutputStream zos = null;
-      File[] files = targetDir.listFiles();
+      List<File> files =new ArrayList<>();
+      if(targetDir.isFile()){
+         files.add(targetDir);
+      }else{
+         File[] temps = targetDir.listFiles();
+         files.addAll(Arrays.asList(temps));
+      }
       try {
          zos = new ZipArchiveOutputStream(targetZip);
          zos.setUseZip64(Zip64Mode.AsNeeded);
@@ -74,7 +84,9 @@ public class ZipEntryAnne {
          zos.close();
       } catch (IOException e) {
          e.printStackTrace();
+         return false;
       }
+      return true;
    }
    /**
     *
@@ -110,14 +122,14 @@ public class ZipEntryAnne {
       FileInputStream fis = new FileInputStream(new File(inPath));
       FileOutputStream fos = new FileOutputStream(new File(outPath));
       DeflaterOutputStream dos = new DeflaterOutputStream(fos,
-              new Deflater(0,true),8192);
-//      IOUtils.copy(fis,dos);
-      byte[] b = new byte[8192];
-      int len = 0;
-      while ((len = fis.read(b)) != -1) {
-         Log.e("TAG", "deflater:------- "+ len+"");
-         dos.write(b, 0, len);
-      }
+              new Deflater(0,true));
+      org.apache.commons.compress.utils.IOUtils.copy(fis,dos);
+//      byte[] b = new byte[8192];
+//      int len = 0;
+//      while ((len = fis.read(b)) != -1) {
+//         Log.e("TAG", "deflater:------- "+ len+"");
+//         dos.write(b, 0, len);
+//      }
       fis.close();
       dos.close();
       fos.close();
